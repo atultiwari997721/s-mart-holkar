@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scratch & Win Coupon!</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Open Sans", sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #333;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .container {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-family: "Montserrat", sans-serif;
+        color: #4a90e2;
+        margin-bottom: 20px;
+        font-size: 2.2rem;
+      }
+
+      .scratch-card-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 350px; /* Max width for the card itself */
+        height: 200px; /* Fixed height for consistency */
+        margin: 30px auto;
+        border: 4px solid #4a90e2;
+        border-radius: 10px;
+        overflow: hidden; /* Ensure content stays within borders */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      #coupon-display {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(45deg, #50e3c2, #4a90e2); /* Gradient background */
+        color: #ffffff;
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        padding: 10px;
+        box-sizing: border-box;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      #coupon-code {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin-top: 10px;
+        letter-spacing: 2px;
+        background-color: rgba(0, 0, 0, 0.2); /* Slightly transparent background for code */
+        padding: 5px 15px;
+        border-radius: 5px;
+      }
+
+      #scratch-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #a0a0a0; /* Grey scratchable layer */
+        /* You can use an image here too: background-image: url('scratch-texture.png'); */
+        cursor: grabbing;
+        touch-action: none; /* Prevent default touch actions like scrolling */
+      }
+
+      .instructions {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 25px;
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      button {
+        background-color: #4a90e2;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      button:hover {
+        background-color: #367cbf;
+        transform: translateY(-2px);
+      }
+
+      button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+      }
+
+      .message {
+        margin-top: 20px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #28a745; /* Success color */
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.8rem;
+        }
+        .scratch-card-wrapper {
+          height: 180px; /* Slightly smaller height on mobile */
+        }
+        #coupon-display {
+          font-size: 1.5rem;
+        }
+        #coupon-code {
+          font-size: 2rem;
+        }
+        .instructions {
+          font-size: 0.9rem;
+        }
+        button {
+          padding: 10px 20px;
+          font-size: 1rem;
+        }
+        .button-group {
+          flex-direction: column; /* Stack buttons on small screens */
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Scratch & Win!</h1>
+      <p class="instructions">
+        Scratch the card below to reveal your exclusive coupon code!
+      </p>
+
+      <div class="scratch-card-wrapper">
+        <div id="coupon-display">
+          <p>Your Coupon Code:</p>
+          <p id="coupon-code">XXXX-XXXX</p>
+        </div>
+        <canvas id="scratch-canvas"></canvas>
+      </div>
+
+      <div class="button-group">
+        <button id="new-coupon-btn">Get New Coupon</button>
+        <button id="copy-coupon-btn" disabled>Copy Code</button>
+      </div>
+      <p id="message" class="message"></p>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("scratch-canvas");
+      const ctx = canvas.getContext("2d");
+      const couponCodeDisplay = document.getElementById("coupon-code");
+      const newCouponBtn = document.getElementById("new-coupon-btn");
+      const copyCouponBtn = document.getElementById("copy-coupon-btn");
+      const messageDisplay = document.getElementById("message");
+
+      let isScratching = false;
+      let revealedPercentage = 0;
+      const revealThreshold = 50; // Percentage of pixels to reveal before showing code
+
+      // Function to generate a random alphanumeric coupon code
+      function generateCouponCode(length = 10) {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let result = "";
+        for (let i = 0; i < length; i++) {
+          result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        // Format with hyphens for readability
+        return result.match(/.{1,4}/g).join("-");
+      }
+
+      // Initialize canvas and draw scratch layer
+      function initCanvas() {
+        // Set canvas dimensions to match its parent wrapper
+        canvas.width = canvas.parentElement.offsetWidth;
+        canvas.height = canvas.parentElement.offsetHeight;
+
+        // Draw the initial scratchable layer (grey color)
+        ctx.fillStyle = "#a0a0a0";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Set composite operation to 'destination-out' to erase pixels
+        ctx.globalCompositeOperation = "destination-out";
+
+        // Set up drawing style for erasing
+        ctx.lineWidth = 40; // Width of the scratch "tool"
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        // Reset state
+        isScratching = false;
+        revealedPercentage = 0;
+        canvas.style.display = "block"; // Ensure canvas is visible
+        copyCouponBtn.disabled = true; // Disable copy button initially
+        messageDisplay.textContent = ""; // Clear any previous messages
+      }
+
+      // Function to draw (erase) on the canvas
+      function drawScratch(x, y) {
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+
+      // Calculate transparent pixels to determine reveal percentage
+      function getTransparentPixelsPercentage() {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+        let transparentPixels = 0;
+
+        for (let i = 0; i < pixels.length; i += 4) {
+          // Check alpha channel (index 3)
+          if (pixels[i + 3] === 0) {
+            transparentPixels++;
+          }
+        }
+        return (transparentPixels / (pixels.length / 4)) * 100;
+      }
+
+      // Event Listeners for Mouse
+      canvas.addEventListener("mousedown", (e) => {
+        isScratching = true;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      });
+
+      canvas.addEventListener("mousemove", (e) => {
+        if (!isScratching) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        drawScratch(x, y);
+        checkReveal();
+      });
+
+      canvas.addEventListener("mouseup", () => {
+        isScratching = false;
+      });
+
+      canvas.addEventListener("mouseleave", () => {
+        isScratching = false; // Stop scratching if mouse leaves canvas
+      });
+
+      // Event Listeners for Touch
+      canvas.addEventListener("touchstart", (e) => {
+        e.preventDefault(); // Prevent scrolling
+        isScratching = true;
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      });
+
+      canvas.addEventListener("touchmove", (e) => {
+        e.preventDefault(); // Prevent scrolling
+        if (!isScratching) return;
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        drawScratch(x, y);
+        checkReveal();
+      });
+
+      canvas.addEventListener("touchend", () => {
+        isScratching = false;
+      });
+
+      function checkReveal() {
+        revealedPercentage = getTransparentPixelsPercentage();
+        if (revealedPercentage >= revealThreshold) {
+          canvas.style.display = "none"; // Hide canvas to fully reveal coupon
+          copyCouponBtn.disabled = false; // Enable copy button
+          messageDisplay.textContent = "Congratulations! Your code is revealed!";
+        }
+      }
+
+      // Reset function
+      function resetCard() {
+        couponCodeDisplay.textContent = generateCouponCode(); // Generate new code
+        initCanvas(); // Re-initialize canvas
+      }
+
+      // Copy coupon code to clipboard
+      function copyCouponCode() {
+        const code = couponCodeDisplay.textContent;
+        const tempInput = document.createElement("input");
+        tempInput.value = code;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy"); // Use execCommand for broader compatibility
+        document.body.removeChild(tempInput);
+        messageDisplay.textContent = "Coupon code copied to clipboard!";
+        setTimeout(() => {
+          messageDisplay.textContent = "";
+        }, 2000); // Clear message after 2 seconds
+      }
+
+      // Initial setup
+      document.addEventListener("DOMContentLoaded", () => {
+        resetCard(); // Initialize with a fresh card
+        newCouponBtn.addEventListener("click", resetCard);
+        copyCouponBtn.addEventListener("click", copyCouponCode);
+      });
+    </script>
+  </body>
+</html>
