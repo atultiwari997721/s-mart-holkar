@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>S-Mart</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         --primary-color: #4a90e2;
         --secondary-color: #50e3c2;
-        --dark-bg: #2c3e50;
-        --text-color: #34495e;
-        --light-bg: #ecf0f1;
+        --dark-bg: #f8f8f8; /* Changed to a light grey */
+        --text-color: #333333; /* Changed to a darker grey for better contrast */
+        --light-bg: #fdfdfd; /* Changed to a very subtle off-white */
         --white: #ffffff;
         --danger-color: #e74c3c;
         --buy-now-color: #28a745;
@@ -29,77 +29,68 @@
         line-height: 1.6;
       }
 
-      /* Loading Overlay Styles */
+      /* --- Loading Overlay Styles --- */
       #loading-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--dark-bg); /* Dark background for loading */
+        background-color: var(--dark-bg); /* Dark background for the loader */
         display: flex;
+        flex-direction: column; /* Arrange items vertically */
         justify-content: center;
         align-items: center;
         z-index: 9999; /* Ensure it's on top of everything */
-        opacity: 1;
-        visibility: visible;
-        transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-      }
-
-      #loading-overlay.hidden {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none; /* Allow clicks through once hidden */
-      }
-
-      .loading-logo {
-        display: flex;
-        align-items: center;
+        transition: opacity 0.5s ease-out; /* Smooth fade out effect */
+        color: var(--text-color); /* Text color for the loading screen, now darker */
         font-family: "Montserrat", sans-serif;
-        font-size: 4rem; /* Base size for "S-Mart" combined */
-        font-weight: 700;
-        color: var(--white); /* Default text color for "Mart" */
       }
 
-      .spinner-s {
-        font-size: 10rem; /* Make the 'S' very big */
-        font-weight: 900; /* Extra bold */
-        color: var(--primary-color); /* Blue color for the S */
-        margin-right: 10px; /* Space between S and Mart */
-        display: inline-block; /* Essential for transform to work */
-        animation: pulseColorAndScale 2s infinite alternate; /* Attractive animation */
+      #loading-overlay h2 {
+        font-size: 8vw; /* Slightly smaller base font size for the whole S-Mart text */
+        margin-bottom: 20px; /* Space between text and loader */
+        color: var(--primary-color); /* Primary color for S-Mart text */
+        text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--secondary-color); /* Added glow effect */
+        letter-spacing: 5px; /* Added letter spacing */
+        animation: fadeInText 1.5s ease-in-out infinite alternate; /* Subtle breathing animation for text */
       }
 
-      @keyframes pulseColorAndScale {
-        0% {
-          color: var(--primary-color); /* Blue */
-          transform: scale(1);
-        }
-        50% {
-          color: var(--white); /* White */
-          transform: scale(1.05); /* Slightly larger */
-        }
-        100% {
-          color: var(--primary-color); /* Blue */
-          transform: scale(1);
-        }
+      #loading-overlay h2 .loading-s {
+        font-size: 1.5em; /* Make 'S' significantly larger than the rest of the text */
+        color: var(--secondary-color); /* Different color for 'S' */
+        text-shadow: 0 0 15px var(--secondary-color), 0 0 30px var(--primary-color); /* More prominent glow for 'S' */
+        font-weight: 700; /* Make 'S' bolder */
+        display: inline-block; /* Allows transform to work properly */
+        transform: scale(1.1); /* Slightly scale up 'S' */
+        transition: transform 0.3s ease; /* Smooth transition for scale */
       }
 
-      .loading-text-mart {
-        opacity: 0;
-        animation: fadeInText 0.8s ease-in forwards;
-        animation-delay: 0.5s; /* Appear after S starts animating */
+
+      .loader {
+        border: 8px solid #f3f3f3; /* Light grey border */
+        border-top: 8px solid var(--primary-color); /* Primary color for the spinning part */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite; /* Spinning animation */
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
 
       @keyframes fadeInText {
-        to {
-          opacity: 1;
-        }
+        0% { opacity: 0.7; transform: scale(0.98); }
+        100% { opacity: 1; transform: scale(1.02); }
       }
+      /* --- End Loading Overlay Styles --- */
+
 
       header {
         background: var(--dark-bg);
-        color: var(--white);
+        color: var(--text-color); /* Changed to text-color for contrast */
         padding: 1rem 2rem;
         display: flex;
         align-items: center;
@@ -181,7 +172,7 @@
 
       .cart-btn {
         background: var(--secondary-color);
-        color: var(--dark-bg);
+        color: var(--dark-bg); /* Changed to dark-bg for contrast */
         border: none;
         padding: 10px 20px;
         border-radius: 25px;
@@ -259,8 +250,8 @@
         justify-content: center; /* Center buttons when wrapped */
       }
       .tagline-buttons .category-btn {
-        background: var(--dark-bg);
-        color: var(--white);
+        background: var(--dark-bg); /* Changed to dark-bg for contrast */
+        color: var(--text-color); /* Changed to text-color for contrast */
         border: none;
         padding: 8px 15px;
         border-radius: 20px;
@@ -271,7 +262,7 @@
       }
       .tagline-buttons .category-btn:hover {
         background: var(--secondary-color);
-        color: var(--dark-bg);
+        color: var(--dark-bg); /* Changed to dark-bg for contrast */
         transform: translateY(-2px);
       }
 
@@ -313,7 +304,7 @@
         font-size: 1.3rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: var(--dark-bg);
+        color: var(--text-color); /* Changed to text-color for contrast */
       }
       .card-description {
         font-size: 0.9rem;
@@ -351,7 +342,7 @@
       .card button {
         padding: 10px 15px;
         border: none;
-        background: var(--dark-bg);
+        background: var(--primary-color); /* Changed to primary-color */
         color: var(--white);
         border-radius: 8px;
         cursor: pointer;
@@ -361,7 +352,7 @@
         flex: 1;
       }
       .card button:hover {
-        background: var(--primary-color);
+        background: #3a7ccb; /* Darker primary color on hover */
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       }
       .card .buy-now-btn {
@@ -430,7 +421,7 @@
       }
       .modal-content h3 {
         font-family: "Montserrat", sans-serif;
-        color: var(--dark-bg);
+        color: var(--text-color); /* Changed to text-color for contrast */
         margin-top: 0;
         margin-bottom: 1.5rem;
         font-size: 1.8rem;
@@ -500,8 +491,7 @@
         padding-right: 5px; /* Space for scrollbar */
         /* Custom scrollbar styles */
         scrollbar-width: thin; /* "auto" or "thin" */
-        scrollbar-color: var(--primary-color)
-          var(--light-bg); /* thumb and track color */
+        scrollbar-color: var(--primary-color) var(--light-bg); /* thumb and track color */
       }
 
       /* Webkit (Chrome, Safari) scrollbar styles */
@@ -564,7 +554,7 @@
       .item-details h4 {
         margin: 0 0 0px 0; /* Reduced margin */
         font-size: 0.8rem; /* Slightly smaller font */
-        color: var(--dark-bg);
+        color: var(--text-color); /* Changed to text-color for contrast */
         white-space: nowrap; /* Prevent wrapping */
         overflow: hidden; /* Hide overflow */
         text-overflow: ellipsis; /* Add ellipsis for overflow */
@@ -593,7 +583,7 @@
         text-align: right;
         font-size: 0.9rem; /* Slightly smaller font */
         font-weight: 700;
-        color: var(--dark-bg);
+        color: var(--text-color); /* Changed to text-color for contrast */
       }
       .cart-actions-modal {
         display: flex;
@@ -628,7 +618,7 @@
         transition: background-color 0.2s ease;
       }
       .buy-now-cart-btn-modal:hover {
-        background: #218838;
+        background-color: #218838;
       }
 
       /* Adjusted Remove button styling - Very small and positioned next to price */
@@ -778,8 +768,7 @@
         overflow-y: auto;
         padding-bottom: 5px; /* Space for scrollbar */
         scrollbar-width: thin;
-        scrollbar-color: var(--primary-color)
-          var(--light-bg); /* thumb and track color */
+        scrollbar-color: var(--primary-color) var(--light-bg);
       }
       #gallery-thumbnails::-webkit-scrollbar {
         height: 5px; /* Horizontal scrollbar for thumbnails */
@@ -834,15 +823,15 @@
       .about {
         margin-top: 3rem;
         padding: 2.5rem;
-        background-color: var(--dark-bg);
-        color: var(--white);
+        background-color: var(--dark-bg); /* Changed to dark-bg for contrast */
+        color: var(--text-color); /* Changed to text-color for contrast */
         text-align: center;
       }
       .about h2 {
         font-family: "Montserrat", sans-serif;
         font-size: 2rem;
         margin-bottom: 1.5rem;
-        color: var(--secondary-color);
+        color: var(--primary-color); /* Changed to primary-color */
       }
       .about p {
         max-width: 900px;
@@ -925,15 +914,6 @@
       }
 
       @media (max-width: 480px) {
-        /* Loading screen adjustments for mobile */
-        .loading-logo {
-          font-size: 2.5rem; /* Smaller combined font size for mobile */
-        }
-        .spinner-s {
-          font-size: 6rem; /* Smaller 'S' for mobile */
-          margin-right: 5px;
-        }
-
         header {
           padding: 0.8rem;
           min-height: 80px;
@@ -1168,10 +1148,8 @@
   <body>
     <!-- Loading Overlay -->
     <div id="loading-overlay">
-      <div class="loading-logo">
-        <span class="spinner-s">S</span>
-        <span class="loading-text-mart">Mart</span>
-      </div>
+      <h2><span class="loading-s">S</span>-Mart</h2>
+      <div class="loader"></div>
     </div>
 
     <header>
@@ -1344,15 +1322,6 @@
     </div>
 
     <script>
-      // JavaScript to hide the loading overlay once the page is fully loaded
-      window.addEventListener("load", () => {
-        const loadingOverlay = document.getElementById("loading-overlay");
-        // Hide after 3 seconds
-        setTimeout(() => {
-          loadingOverlay.classList.add("hidden");
-        }, 3000); // 3000 milliseconds = 3 seconds
-      });
-
       let cart = [];
       let currentProduct = null;
       let currentAction = "";
@@ -1617,6 +1586,7 @@
           discountType: "Nill",
           discountValue: 0, // No discount
         },
+        
       ];
 
       // --- Local Storage Functions ---
@@ -2023,7 +1993,7 @@
         let cartContentHtml = "";
         let total = 0;
         let whatsappMessage =
-          "Hello S-Mart! I'd like to order the following items: is am from holkar\n\n";
+          "Hello S-Mart! I'd like to order the following items:\n\n";
 
         if (cart.length === 0) {
           cartItemsDisplay.innerHTML =
@@ -2275,6 +2245,17 @@
       }
 
       // Removed showPrevImage and showNextImage functions
+
+      // --- Loading Page Logic ---
+      window.addEventListener('load', function() {
+        const loadingOverlay = document.getElementById('loading-overlay');
+        setTimeout(function() {
+          loadingOverlay.style.opacity = '0'; // Start fade out
+          setTimeout(function() {
+            loadingOverlay.style.display = 'none'; // Hide after fade out
+          }, 500); // This should match the CSS transition duration for opacity
+        }, 3000); // Keep the loading page visible for 3 seconds
+      });
     </script>
   </body>
 </html>

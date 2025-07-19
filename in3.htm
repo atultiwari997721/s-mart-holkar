@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>S-Mart</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -29,73 +29,36 @@
         line-height: 1.6;
       }
 
-      /* Loading Overlay Styles */
+      /* --- Loading Overlay Styles --- */
       #loading-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--dark-bg); /* Dark background for loading */
+        background-color: var(--dark-bg); /* Dark background for the loader */
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 9999; /* Ensure it's on top of everything */
-        opacity: 1;
-        visibility: visible;
-        transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        transition: opacity 0.5s ease-out; /* Smooth fade out effect */
       }
 
-      #loading-overlay.hidden {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none; /* Allow clicks through once hidden */
+      .loader {
+        border: 8px solid #f3f3f3; /* Light grey border */
+        border-top: 8px solid var(--primary-color); /* Primary color for the spinning part */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite; /* Spinning animation */
       }
 
-      .loading-logo {
-        display: flex;
-        align-items: center;
-        font-family: "Montserrat", sans-serif;
-        font-size: 4rem; /* Base size for "S-Mart" combined */
-        font-weight: 700;
-        color: var(--white); /* Default text color for "Mart" */
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
+      /* --- End Loading Overlay Styles --- */
 
-      .spinner-s {
-        font-size: 10rem; /* Make the 'S' very big */
-        font-weight: 900; /* Extra bold */
-        color: var(--primary-color); /* Blue color for the S */
-        margin-right: 10px; /* Space between S and Mart */
-        display: inline-block; /* Essential for transform to work */
-        animation: pulseColorAndScale 2s infinite alternate; /* Attractive animation */
-      }
-
-      @keyframes pulseColorAndScale {
-        0% {
-          color: var(--primary-color); /* Blue */
-          transform: scale(1);
-        }
-        50% {
-          color: var(--white); /* White */
-          transform: scale(1.05); /* Slightly larger */
-        }
-        100% {
-          color: var(--primary-color); /* Blue */
-          transform: scale(1);
-        }
-      }
-
-      .loading-text-mart {
-        opacity: 0;
-        animation: fadeInText 0.8s ease-in forwards;
-        animation-delay: 0.5s; /* Appear after S starts animating */
-      }
-
-      @keyframes fadeInText {
-        to {
-          opacity: 1;
-        }
-      }
 
       header {
         background: var(--dark-bg);
@@ -500,8 +463,7 @@
         padding-right: 5px; /* Space for scrollbar */
         /* Custom scrollbar styles */
         scrollbar-width: thin; /* "auto" or "thin" */
-        scrollbar-color: var(--primary-color)
-          var(--light-bg); /* thumb and track color */
+        scrollbar-color: var(--primary-color) var(--light-bg); /* thumb and track color */
       }
 
       /* Webkit (Chrome, Safari) scrollbar styles */
@@ -628,7 +590,7 @@
         transition: background-color 0.2s ease;
       }
       .buy-now-cart-btn-modal:hover {
-        background: #218838;
+        background-color: #218838;
       }
 
       /* Adjusted Remove button styling - Very small and positioned next to price */
@@ -778,8 +740,7 @@
         overflow-y: auto;
         padding-bottom: 5px; /* Space for scrollbar */
         scrollbar-width: thin;
-        scrollbar-color: var(--primary-color)
-          var(--light-bg); /* thumb and track color */
+        scrollbar-color: var(--primary-color) var(--light-bg);
       }
       #gallery-thumbnails::-webkit-scrollbar {
         height: 5px; /* Horizontal scrollbar for thumbnails */
@@ -925,15 +886,6 @@
       }
 
       @media (max-width: 480px) {
-        /* Loading screen adjustments for mobile */
-        .loading-logo {
-          font-size: 2.5rem; /* Smaller combined font size for mobile */
-        }
-        .spinner-s {
-          font-size: 6rem; /* Smaller 'S' for mobile */
-          margin-right: 5px;
-        }
-
         header {
           padding: 0.8rem;
           min-height: 80px;
@@ -1168,10 +1120,7 @@
   <body>
     <!-- Loading Overlay -->
     <div id="loading-overlay">
-      <div class="loading-logo">
-        <span class="spinner-s">S</span>
-        <span class="loading-text-mart">Mart</span>
-      </div>
+      <div class="loader"></div>
     </div>
 
     <header>
@@ -1344,15 +1293,6 @@
     </div>
 
     <script>
-      // JavaScript to hide the loading overlay once the page is fully loaded
-      window.addEventListener("load", () => {
-        const loadingOverlay = document.getElementById("loading-overlay");
-        // Hide after 3 seconds
-        setTimeout(() => {
-          loadingOverlay.classList.add("hidden");
-        }, 3000); // 3000 milliseconds = 3 seconds
-      });
-
       let cart = [];
       let currentProduct = null;
       let currentAction = "";
@@ -1617,6 +1557,7 @@
           discountType: "Nill",
           discountValue: 0, // No discount
         },
+        
       ];
 
       // --- Local Storage Functions ---
@@ -2023,7 +1964,7 @@
         let cartContentHtml = "";
         let total = 0;
         let whatsappMessage =
-          "Hello S-Mart! I'd like to order the following items: is am from holkar\n\n";
+          "Hello S-Mart! I'd like to order the following items:\n\n";
 
         if (cart.length === 0) {
           cartItemsDisplay.innerHTML =
@@ -2275,6 +2216,17 @@
       }
 
       // Removed showPrevImage and showNextImage functions
+
+      // --- Loading Page Logic ---
+      window.addEventListener('load', function() {
+        const loadingOverlay = document.getElementById('loading-overlay');
+        setTimeout(function() {
+          loadingOverlay.style.opacity = '0'; // Start fade out
+          setTimeout(function() {
+            loadingOverlay.style.display = 'none'; // Hide after fade out
+          }, 500); // This should match the CSS transition duration for opacity
+        }, 3000); // Keep the loading page visible for 3 seconds
+      });
     </script>
   </body>
 </html>
