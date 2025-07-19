@@ -12,9 +12,9 @@
       :root {
         --primary-color: #4a90e2;
         --secondary-color: #50e3c2;
-        --dark-bg: #f8f8f8; /* Changed to a light grey */
-        --text-color: #333333; /* Changed to a darker grey for better contrast */
-        --light-bg: #fdfdfd; /* Changed to a very subtle off-white */
+        --dark-bg: #2c3e50;
+        --text-color: #34495e;
+        --light-bg: #ecf0f1;
         --white: #ffffff;
         --danger-color: #e74c3c;
         --buy-now-color: #28a745;
@@ -43,29 +43,18 @@
         align-items: center;
         z-index: 9999; /* Ensure it's on top of everything */
         transition: opacity 0.5s ease-out; /* Smooth fade out effect */
-        color: var(--text-color); /* Text color for the loading screen, now darker */
+        color: var(--white); /* Text color for the loading screen */
         font-family: "Montserrat", sans-serif;
       }
 
       #loading-overlay h2 {
-        font-size: 8vw; /* Slightly smaller base font size for the whole S-Mart text */
+        font-size: 10vw; /* Responsive font size */
         margin-bottom: 20px; /* Space between text and loader */
-        color: var(--primary-color); /* Primary color for S-Mart text */
-        text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--secondary-color); /* Added glow effect */
+        color: var(--secondary-color); /* Highlight S-Mart text */
+        text-shadow: 0 0 10px var(--secondary-color), 0 0 20px var(--primary-color); /* Added glow effect */
         letter-spacing: 5px; /* Added letter spacing */
         animation: fadeInText 1.5s ease-in-out infinite alternate; /* Subtle breathing animation for text */
       }
-
-      #loading-overlay h2 .loading-s {
-        font-size: 1.5em; /* Make 'S' significantly larger than the rest of the text */
-        color: var(--secondary-color); /* Different color for 'S' */
-        text-shadow: 0 0 15px var(--secondary-color), 0 0 30px var(--primary-color); /* More prominent glow for 'S' */
-        font-weight: 700; /* Make 'S' bolder */
-        display: inline-block; /* Allows transform to work properly */
-        transform: scale(1.1); /* Slightly scale up 'S' */
-        transition: transform 0.3s ease; /* Smooth transition for scale */
-      }
-
 
       .loader {
         border: 8px solid #f3f3f3; /* Light grey border */
@@ -90,7 +79,7 @@
 
       header {
         background: var(--dark-bg);
-        color: var(--text-color); /* Changed to text-color for contrast */
+        color: var(--white);
         padding: 1rem 2rem;
         display: flex;
         align-items: center;
@@ -172,7 +161,7 @@
 
       .cart-btn {
         background: var(--secondary-color);
-        color: var(--dark-bg); /* Changed to dark-bg for contrast */
+        color: var(--dark-bg);
         border: none;
         padding: 10px 20px;
         border-radius: 25px;
@@ -250,8 +239,8 @@
         justify-content: center; /* Center buttons when wrapped */
       }
       .tagline-buttons .category-btn {
-        background: var(--dark-bg); /* Changed to dark-bg for contrast */
-        color: var(--text-color); /* Changed to text-color for contrast */
+        background: var(--dark-bg);
+        color: var(--white);
         border: none;
         padding: 8px 15px;
         border-radius: 20px;
@@ -262,7 +251,7 @@
       }
       .tagline-buttons .category-btn:hover {
         background: var(--secondary-color);
-        color: var(--dark-bg); /* Changed to dark-bg for contrast */
+        color: var(--dark-bg);
         transform: translateY(-2px);
       }
 
@@ -304,7 +293,7 @@
         font-size: 1.3rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: var(--text-color); /* Changed to text-color for contrast */
+        color: var(--dark-bg);
       }
       .card-description {
         font-size: 0.9rem;
@@ -342,7 +331,7 @@
       .card button {
         padding: 10px 15px;
         border: none;
-        background: var(--primary-color); /* Changed to primary-color */
+        background: var(--dark-bg);
         color: var(--white);
         border-radius: 8px;
         cursor: pointer;
@@ -352,7 +341,7 @@
         flex: 1;
       }
       .card button:hover {
-        background: #3a7ccb; /* Darker primary color on hover */
+        background: var(--primary-color);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       }
       .card .buy-now-btn {
@@ -421,7 +410,7 @@
       }
       .modal-content h3 {
         font-family: "Montserrat", sans-serif;
-        color: var(--text-color); /* Changed to text-color for contrast */
+        color: var(--dark-bg);
         margin-top: 0;
         margin-bottom: 1.5rem;
         font-size: 1.8rem;
@@ -554,7 +543,7 @@
       .item-details h4 {
         margin: 0 0 0px 0; /* Reduced margin */
         font-size: 0.8rem; /* Slightly smaller font */
-        color: var(--text-color); /* Changed to text-color for contrast */
+        color: var(--dark-bg);
         white-space: nowrap; /* Prevent wrapping */
         overflow: hidden; /* Hide overflow */
         text-overflow: ellipsis; /* Add ellipsis for overflow */
@@ -583,7 +572,7 @@
         text-align: right;
         font-size: 0.9rem; /* Slightly smaller font */
         font-weight: 700;
-        color: var(--text-color); /* Changed to text-color for contrast */
+        color: var(--dark-bg);
       }
       .cart-actions-modal {
         display: flex;
@@ -823,15 +812,15 @@
       .about {
         margin-top: 3rem;
         padding: 2.5rem;
-        background-color: var(--dark-bg); /* Changed to dark-bg for contrast */
-        color: var(--text-color); /* Changed to text-color for contrast */
+        background-color: var(--dark-bg);
+        color: var(--white);
         text-align: center;
       }
       .about h2 {
         font-family: "Montserrat", sans-serif;
         font-size: 2rem;
         margin-bottom: 1.5rem;
-        color: var(--primary-color); /* Changed to primary-color */
+        color: var(--secondary-color);
       }
       .about p {
         max-width: 900px;
@@ -1148,7 +1137,7 @@
   <body>
     <!-- Loading Overlay -->
     <div id="loading-overlay">
-      <h2><span class="loading-s">S</span>-Mart</h2>
+      <h2>S-Mart</h2>
       <div class="loader"></div>
     </div>
 
@@ -1360,60 +1349,7 @@
       // Product data - This is the single place to manage product information
       const productsData = [
         {
-          code: "S012",
-          name: "Pentonic Pen 10 Unit Blue pen",
-          description:
-            "Pentonic Pen 10 Unit Blue pen ",
-          price: 89,
-          marketPrice: 100, // Added market price
-          images: [
-            "productpic/pentonic_pack10.png",
-           
-         
-          ],
-          offer: "₹11 Less than Market",
-           // Mark this product as revealing soon
-          productCouponCode: "S-MartForHolkarStudent", // Specific coupon code for this product
-          discountType: "nill", // "fixed" or "percentage"
-          discountValue: 10, // 20 rupees off
-        },
-        {
-          code: "S016",
-          name: "Sticky Notes 100 Sheets",
-          description:
-            "Best Quality Sticky Notes 100 Sheets",
-          price: 25,
-          marketPrice: 55, // Added market price
-          images: [
-            "productpic/sticky _notespink.png",
-            "productpic/Sticky_notesBack.jpeg",
-         
-          ],
-          offer: "₹30 Less than Market",
-           // Mark this product as revealing soon
-          productCouponCode: "S-MartForHolkarStudent", // Specific coupon code for this product
-          discountType: "nill", // "fixed" or "percentage"
-          discountValue: 10, // 20 rupees off
-        },
-        /* {
-          code: "S017",
-          name: "Sticky Notes 5 cut",
-          description:
-            "Best Quality Sticky Notes 100 Sheets",
-          price: 19,
-          marketPrice: 30, // Added market price
-          images: [
-            "productpic/sticky_notes5Cut.png",
-        
-          ],
-          offer: "₹11 Less than Market",
-           // Mark this product as revealing soon
-          productCouponCode: "S-MartForHolkarStudent", // Specific coupon code for this product
-          discountType: "nill", // "fixed" or "percentage"
-          discountValue: 10, // 20 rupees off
-        }, */
-        {
-          code: "S005",
+          code: "S001",
           name: "Spiral Notebook 200 Page",
           description:
             "Spiral Notebook 200 page",
@@ -1421,171 +1357,62 @@
           marketPrice: 80, // Added market price
           images: [
             "productpic/spiralNotebook200page.png",
-            "productpic/Spiral200pagesPic2.png",
+            "productpic/Spiral400pagesPic2.png",
          
           ],
-          offer: "₹31 Less than Market",
+          offer: "₹250 Less than Market",
            // Mark this product as revealing soon
-          productCouponCode: "S-MartForHolkarStudent", // Specific coupon code for this product
-          discountType: "nill", // "fixed" or "percentage"
-          discountValue: 10, // 20 rupees off
+          productCouponCode: "SMART20", // Specific coupon code for this product
+          discountType: "Nill", // "fixed" or "percentage"
+          discountValue: 20, // 20 rupees off
         },
-
         {
-          code: "S006",
+          code: "S002",
           name: "Spiral Notebook 300 page",
           description:
             "Spiral Notebook 300 page",
           price: 69,
           marketPrice: 120, // Added market price
-          images: ["productpic/spiral300pageFront.png", 
+          images: ["productpic/spiral500pageFront.png", 
           "productpic/SpiralPageQuality.jpg"],
 
-          offer: "₹51 Less than Market",
-          // Mark this product as revealing soon
+          offer: "10% Off Today!",
+          revealingSoon: true,
           productCouponCode: "H10",
           discountType: "Nill",
           discountValue: 10, // 10% off
         },
-        /*{
-          code: "S007",
+        {
+          code: "S003",
           name: "Spiral 400 page",
           description: "Spiral 400 page",
           price: 89,
           marketPrice: 140, // Added market price
           images: [
-            "productpic/Spiral400page.png",
-            "productpic/SpiralPageQuality.jpg",
+            "productpic/pic.jpeg",
+            "productpic/pic.jpeg",
+            "productpic/pic.jpeg",
           ],
-          offer: "₹51 Less than Market",
-         
-          // Mark this product as revealing soon
+          offer: "Free Laptop Bag",
+          revealingSoon: true, // Mark this product as revealing soon
           productCouponCode: "LAPTOPBAG",
           discountType: "Nill",
           discountValue: 50, // 50 rupees off
-        },*/
-         {
-          code: "S008",
-          name: "Spiral 500 page",
-          description: "Spiral 500 page",
-          price: 119,
-          marketPrice: 220, // Added market price
-          images: ["productpic/Spiral500page.jpg",
-            "productpic/SpiralPageQuality.jpg",
-          ],
-          offer: "₹101 Less than Market",
-          
-          productCouponCode: "MOUSEBOGO",
-          discountType: "Nill",
-          discountValue: 0, // No discount
-        }, 
-        
-        /*{
-          code: "S002",
-          name: "Rough Notebook 300 Page",
-          description: "A3 Size Rough Notebook 300 Page Premium Quality Pages ",
-          price: 49,
-          marketPrice: 90, // Added market price
-          images: ["productpic/Rough300pageFront.png",
-                   "prodctpic/RoughA3300pageprimium.png",
-                    "productpic/pageQualityA4Notebook.png",
-          ],
-          offer: "₹41 Less than Market",
-          
-          productCouponCode: "MOUSEBOGO",
-          discountType: "Nill",
-          discountValue: 0, // No discount
-        }, */
-        {
-          code: "S003",
-          name: "Rough Notebook 400 Page",
-          description: "A3 Size Rough Notebook 400 Page Premium Quality Pages ",
-          price: 74,
-          marketPrice: 110, // Added market price
-          images: ["productpic/Rough400PageFront2A3.png",
-            "productpic/Rough400PageFront.png","productpic/pageQualityA4Notebook.png",
-          ],
-          offer: "₹41 Less than Market",
-         
-          productCouponCode: "MOUSEBOGO",
-          discountType: "Nill",
-          discountValue: 0, // No discount
         },
         {
           code: "S004",
-          name: "Rough Notebook 500 Page",
-          description: "A3 Size Rough Notebook 500 Page Premium Quality Pages ",
-          price: 84,
-          marketPrice: 140, // Added market price
-          images: ["productpic/RoughNotebook500page2.png",
-            "productpic/Rough500pageFront.png","productpic/pageQualityA4Notebook.png",
-          ],
-          offer: "₹51 Less than Market",
-        
+          name: "Spiral 500 page",
+          description: "Spiral 500 page",
+          price: 99,
+          marketPrice: 220, // Added market price
+          images: ["productpic/spiral500pageFront.png"],
+          offer: "Buy 1 Get 1 Free",
+          revealingSoon: true,
           productCouponCode: "MOUSEBOGO",
           discountType: "Nill",
           discountValue: 0, // No discount
         },
-       {
-          code: "S001",
-          name: "Rough Notebook 200 Page",
-          description: "A3 Size Rough Notebook 200 Page Rough Pages ",
-          price: 44,
-          marketPrice: 70, // Added market price
-          images: ["productpic/roughA3pic2200page.png",
-            "productpic/roughA3200page.png",
-          ],
-          offer: "₹31 Less than Market",
-           // Not revealing soon
-          productCouponCode: "MOUSEBOGO",
-          discountType: "Nill",
-          discountValue: 0, // No discount
-        },
-        {
-          code: "S010",
-          name: "Assignment Notebook ",
-          description: "Assignment Notebook 50-64 Page ",
-          price: 19,
-          marketPrice: 30, // Added market price
-          images: ["productpic/30rsNotebook.png",
-            
-          ],
-          offer: "₹11 Less than Market",
-           // Not revealing soon
-          productCouponCode: "MOUSEBOGO",
-          discountType: "Nill",
-          discountValue: 0, // No discount
-        },
-        {
-          code: "S011",
-          name: "Assignment Notebook 92 Page",
-          description: "Assignment Notebook 92 Page",
-          price: 29,
-          marketPrice: 40, // Added market price
-          images: ["productpic/AssignmentNotebook92PageFront.png",
-            "productpic/92 page Notebook front2.png",
-          ],
-          offer: "₹11 Less than Market",
-           // Not revealing soon
-          productCouponCode: "MOUSEBOGO",
-          discountType: "Nill",
-          discountValue: 0, // No discount
-        },
-        {
-          code: "S009",
-          name: "Assignment Notebook 164 Page",
-          description: "Notebook 164 Page Best For Assignment ",
-          price: 39,
-          marketPrice: 70, // Added market price
-          images: ["productpic/AssignmentNotebook60PageA4.png",
-            
-          ],
-          offer: "₹31 Less than Market",
-           // Not revealing soon
-          productCouponCode: "MOUSEBOGO",
-          discountType: "Nill",
-          discountValue: 0, // No discount
-        },
+       
         
       ];
 
