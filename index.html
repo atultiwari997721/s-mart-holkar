@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>S-Mart</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -29,73 +29,117 @@
         line-height: 1.6;
       }
 
-      /* Loading Overlay Styles */
-      #loading-overlay {
+      /* Loading Screen Styles */
+      #loading-screen {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--dark-bg); /* Dark background for loading */
+        background-color: var(--dark-bg);
+        color: var(--white);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: "Montserrat", sans-serif;
+        font-size: 2rem;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+      }
+
+      #loading-screen.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      /* Wrapper for the S and the revolving light */
+      .s-loader-wrapper {
+        position: relative;
+        width: 150px; /* Define the area for the S and its orbit */
+        height: 150px;
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 9999; /* Ensure it's on top of everything */
-        opacity: 1;
-        visibility: visible;
-        transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        margin-bottom: 20px;
       }
 
-      #loading-overlay.hidden {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none; /* Allow clicks through once hidden */
-      }
-
-      .loading-logo {
-        display: flex;
-        align-items: center;
-        font-family: "Montserrat", sans-serif;
-        font-size: 4rem; /* Base size for "S-Mart" combined */
-        font-weight: 700;
-        color: var(--white); /* Default text color for "Mart" */
-      }
-
-      .spinner-s {
-        font-size: 10rem; /* Make the 'S' very big */
+      /* Loading Screen S-Mart "S" Styling */
+      .loading-s-animation {
+        font-size: 5rem; /* Make it significantly larger */
         font-weight: 900; /* Extra bold */
-        color: var(--primary-color); /* Blue color for the S */
-        margin-right: 10px; /* Space between S and Mart */
-        display: inline-block; /* Essential for transform to work */
-        animation: pulseColorAndScale 2s infinite alternate; /* Attractive animation */
+        background-image: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent; /* Fallback */
+        text-shadow: 0 0 15px rgba(80, 227, 194, 0.8), 0 0 30px rgba(74, 144, 226, 0.6); /* Initial strong glow */
+        display: inline-block; /* Essential for containing pseudo-elements and respecting text flow */
+        position: relative; /* Establishes positioning context for ::before */
+        animation: sGlowPulse 2s infinite alternate; /* Custom animation for the S itself */
+        line-height: 1; /* Prevents extra vertical space around the S */
+        vertical-align: middle; /* Ensures S aligns well with surrounding text */
+        z-index: 2; /* Ensure S is above the path and light */
       }
 
-      @keyframes pulseColorAndScale {
+      /* Keyframes for the S glow pulse animation */
+      @keyframes sGlowPulse {
         0% {
-          color: var(--primary-color); /* Blue */
+          text-shadow: 0 0 15px rgba(80, 227, 194, 0.8), 0 0 30px rgba(74, 144, 226, 0.6);
           transform: scale(1);
         }
         50% {
-          color: var(--white); /* White */
-          transform: scale(1.05); /* Slightly larger */
+          text-shadow: 0 0 25px rgba(80, 227, 194, 1), 0 0 45px rgba(74, 144, 226, 0.8), 0 0 60px rgba(80, 227, 194, 0.5);
+          transform: scale(1.05); /* Slight scale for pulse effect */
         }
         100% {
-          color: var(--primary-color); /* Blue */
+          text-shadow: 0 0 15px rgba(80, 227, 194, 0.8), 0 0 30px rgba(74, 144, 226, 0.6);
           transform: scale(1);
         }
       }
 
-      .loading-text-mart {
-        opacity: 0;
-        animation: fadeInText 0.8s ease-in forwards;
-        animation-delay: 0.5s; /* Appear after S starts animating */
+      /* The visible path for the revolving light */
+      .revolving-light-path {
+        position: absolute;
+        width: 100px; /* Size of the circular path */
+        height: 100px;
+        border: 2px dashed rgba(74, 144, 226, 0.5); /* Dashed border for the path */
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(74, 144, 226, 0.3); /* Subtle glow for the path */
+        z-index: 0; /* Behind the S */
       }
 
-      @keyframes fadeInText {
-        to {
-          opacity: 1;
-        }
+      /* The actual revolving light dot */
+      .revolving-light-dot {
+        position: absolute;
+        width: 25px; /* Size of the light dot */
+        height: 25px;
+        border-radius: 50%;
+        /* Colorful gradient for the light */
+        background: radial-gradient(circle at center,
+            var(--secondary-color) 0%,
+            var(--primary-color) 50%,
+            var(--white) 100%);
+        box-shadow: 0 0 15px var(--secondary-color), 0 0 30px var(--primary-color), 0 0 45px var(--secondary-color); /* Stronger glow */
+        z-index: 1; /* Above the path, below the S */
+        /* Initial positioning for the orbit */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Center the dot initially */
+        animation: revolveDot 2s linear infinite; /* Animation for the revolving light */
       }
+
+      /* Keyframes for the revolving light dot animation */
+      @keyframes revolveDot {
+        0% { transform: translate(-50%, -50%) rotate(0deg) translateX(50px); } /* Start at 3 o'clock position (radius 50px) */
+        100% { transform: translate(-50%, -50%) rotate(360deg) translateX(50px); } /* Complete full circle */
+      }
+
+      /* Main Content initially hidden */
+      #main-content {
+        display: none; /* Hidden by default, shown after loading */
+      }
+
 
       header {
         background: var(--dark-bg);
@@ -500,8 +544,7 @@
         padding-right: 5px; /* Space for scrollbar */
         /* Custom scrollbar styles */
         scrollbar-width: thin; /* "auto" or "thin" */
-        scrollbar-color: var(--primary-color)
-          var(--light-bg); /* thumb and track color */
+        scrollbar-color: var(--primary-color) var(--light-bg); /* thumb and track color */
       }
 
       /* Webkit (Chrome, Safari) scrollbar styles */
@@ -628,7 +671,7 @@
         transition: background-color 0.2s ease;
       }
       .buy-now-cart-btn-modal:hover {
-        background: #218838;
+        background-color: #218838;
       }
 
       /* Adjusted Remove button styling - Very small and positioned next to price */
@@ -778,8 +821,7 @@
         overflow-y: auto;
         padding-bottom: 5px; /* Space for scrollbar */
         scrollbar-width: thin;
-        scrollbar-color: var(--primary-color)
-          var(--light-bg); /* thumb and track color */
+        scrollbar-color: var(--primary-color) var(--light-bg);
       }
       #gallery-thumbnails::-webkit-scrollbar {
         height: 5px; /* Horizontal scrollbar for thumbnails */
@@ -925,15 +967,6 @@
       }
 
       @media (max-width: 480px) {
-        /* Loading screen adjustments for mobile */
-        .loading-logo {
-          font-size: 2.5rem; /* Smaller combined font size for mobile */
-        }
-        .spinner-s {
-          font-size: 6rem; /* Smaller 'S' for mobile */
-          margin-right: 5px;
-        }
-
         header {
           padding: 0.8rem;
           min-height: 80px;
@@ -1166,193 +1199,189 @@
     </style>
   </head>
   <body>
-    <!-- Loading Overlay -->
-    <div id="loading-overlay">
-      <div class="loading-logo">
-        <span class="spinner-s">S</span>
-        <span class="loading-text-mart">Mart</span>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+      <div class="s-loader-wrapper">
+        <span class="loading-s-animation">S</span>
+        <div class="revolving-light-path"></div>
+        <div class="revolving-light-dot"></div>
       </div>
+      Loading S-Mart...
     </div>
 
-    <header>
-      <div class="logo">
-        <span><img src="productpic/pic.jpeg" alt="S-Mart Logo" /></span>S-Mart
-        <span class="logo-subtext">by the Students For the Students</span>
-      </div>
-      <div class="search-and-cart-wrapper">
-        <div class="search-box">
-          <input
-            type="text"
-            id="search"
-            placeholder="Search products..."
-            onkeyup="filterProducts()"
-          />
+    <!-- Main Content -->
+    <div id="main-content">
+      <header>
+        <div class="logo">
+          <span><img src="productpic/pic.jpeg" alt="S-Mart Logo" /></span>S-Mart
+          <span class="logo-subtext">by the Students For the Students</span>
         </div>
-        <button class="cart-btn" id="cart-button">
-          🛒 Cart (<span id="cart-count">0</span>)
-        </button>
-        <div
-          id="add-to-cart-notification"
-          class="add-to-cart-notification"
-        ></div>
-      </div>
-    </header>
-    <div class="tagline-container">
-      <p class="tagline-text"><strong>Smart people choose S-Mart</strong></p>
-      <p class="tagline-promo-text">
-        We proudly say - Everything below market price, even a pen!
-      </p>
-      <div class="tagline-buttons">
-        <button class="category-btn" onclick="openCategoryUrl('stationery')">
-          Stationery
-        </button>
-        <button class="category-btn" onclick="openCategoryUrl('electronics')">
-          Electronics
-        </button>
-        <button class="category-btn" onclick="openCategoryUrl('clothes')">
-          Clothes
-        </button>
-      </div>
-    </div>
-
-    <div class="container" id="product-list">
-      <!-- Product cards will be inserted here dynamically -->
-    </div>
-    <marquee behavior="scroll" direction="left"
-      >Thank You! Visit again! We are constantly adding new products!</marquee
-    >
-    <div class="request-section">
-      <p>Can't find what you're looking for?</p>
-      <button class="request-btn" onclick="openRequestModal()">
-        Request an Item
-      </button>
-    </div>
-
-    <!-- Request Modal -->
-    <div class="modal" id="request-modal">
-      <div class="modal-content">
-        <span class="close-button" onclick="closeModal('request-modal')"
-          >&times;</span
-        >
-        <h3>Request Product</h3>
-        <input
-          type="text"
-          id="requester-name"
-          placeholder="Your Name"
-          required
-        />
-        <input
-          type="text"
-          id="requester-whatsapp"
-          placeholder="WhatsApp Number"
-          pattern="[0-9]{10,15}"
-          title="Please enter a valid WhatsApp number (10-15 digits)"
-          required
-        />
-        <textarea
-          id="item-details"
-          rows="4"
-          placeholder="Item details (e.g., specific brand, model, features)"
-          required
-        ></textarea>
-        <button onclick="submitRequest()">Submit Request</button>
-      </div>
-    </div>
-
-    <!-- Cart Modal -->
-    <div class="modal" id="cart-modal">
-      <div class="modal-content">
-        <span class="close-button" onclick="closeModal('cart-modal')"
-          >&times;</span
-        >
-        <h3>Your Shopping Cart</h3>
-        <div id="cart-items-display">
-          <!-- Cart items will be dynamically loaded here -->
-        </div>
-        <div class="cart-summary">
-          Total: <span id="cart-total-display">₹0.00</span>
-        </div>
-        <div class="cart-actions-modal">
-          <a
-            href="#"
-            class="whatsapp-btn-modal"
-            id="whatsapp-link"
-            target="_blank"
-            >WhatsApp Us</a
-          >
-          <button class="buy-now-cart-btn-modal" onclick="proceedToBuyCart()">
-            Proceed to Buy
+        <div class="search-and-cart-wrapper">
+          <div class="search-box">
+            <input
+              type="text"
+              id="search"
+              placeholder="Search products..."
+              onkeyup="filterProducts()"
+            />
+          </div>
+          <button class="cart-btn" id="cart-button">
+            🛒 Cart (<span id="cart-count">0</span>)
           </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quantity Selection Modal -->
-    <div class="modal" id="quantity-modal">
-      <div class="modal-content">
-        <span class="close-button" onclick="closeModal('quantity-modal')"
-          >&times;</span
-        >
-        <h3>Select Quantity</h3>
-        <p>How many <span id="qty-product-name"></span>s?</p>
-        <input type="number" id="quantity-input" value="1" min="1" />
-        <div class="coupon-section">
-          <input
-            type="text"
-            id="coupon-code-input"
-            placeholder="Enter Coupon Code (Optional)"
-          />
-          <button id="apply-coupon-btn">Apply Coupon</button>
           <div
-            id="effective-price-display"
-            class="effective-price-display"
+            id="add-to-cart-notification"
+            class="add-to-cart-notification"
           ></div>
         </div>
-        <div class="modal-actions">
-          <button id="qty-confirm-add">Add to Cart</button>
-          <button id="qty-confirm-buy">Buy Now</button>
-          <button id="qty-cancel" onclick="closeModal('quantity-modal')">
-            Cancel
+      </header>
+      <div class="tagline-container">
+        <p class="tagline-text"><strong>Smart people choose S-Mart</strong></p>
+        <p class="tagline-promo-text">
+          We proudly say - Everything below market price, even a pen!
+        </p>
+        <div class="tagline-buttons">
+          <button class="category-btn" onclick="openCategoryUrl('stationery')">
+            Stationery
+          </button>
+          <button class="category-btn" onclick="openCategoryUrl('electronics')">
+            Electronics
+          </button>
+          <button class="category-btn" onclick="openCategoryUrl('clothes')">
+            Clothes
           </button>
         </div>
       </div>
-    </div>
 
-    <!-- Image Gallery Modal -->
-    <div class="modal" id="image-gallery-modal">
-      <div class="modal-content">
-        <span class="close-button" onclick="closeModal('image-gallery-modal')"
-          >&times;</span
-        >
-        <h3 id="gallery-product-name">Product Images</h3>
-        <p
-          id="gallery-product-offer"
-          style="
-            color: var(--offer-color);
-            font-weight: 600;
-            margin-top: -10px;
-            margin-bottom: 15px;
-          "
-        ></p>
-        <div class="gallery-main-area">
-          <img id="main-gallery-image" src="" alt="Main Product Image" />
-        </div>
-        <div id="gallery-thumbnails">
-          <!-- Thumbnails will be dynamically loaded here -->
+      <div class="container" id="product-list">
+        <!-- Product cards will be inserted here dynamically -->
+      </div>
+      <marquee behavior="scroll" direction="left"
+        >Thank You! Visit again! We are constantly adding new products!</marquee
+      >
+      <div class="request-section">
+        <p>Can't find what you're looking for?</p>
+        <button class="request-btn" onclick="openRequestModal()">
+          Request an Item
+        </button>
+      </div>
+
+      <!-- Request Modal -->
+      <div class="modal" id="request-modal">
+        <div class="modal-content">
+          <span class="close-button" onclick="closeModal('request-modal')"
+            >&times;</span
+          >
+          <h3>Request Product</h3>
+          <input
+            type="text"
+            id="requester-name"
+            placeholder="Your Name"
+            required
+          />
+          <input
+            type="text"
+            id="requester-whatsapp"
+            placeholder="WhatsApp Number"
+            pattern="[0-9]{10,15}"
+            title="Please enter a valid WhatsApp number (10-15 digits)"
+            required
+          />
+          <textarea
+            id="item-details"
+            rows="4"
+            placeholder="Item details (e.g., specific brand, model, features)"
+            required
+          ></textarea>
+          <button onclick="submitRequest()">Submit Request</button>
         </div>
       </div>
-    </div>
+
+      <!-- Cart Modal -->
+      <div class="modal" id="cart-modal">
+        <div class="modal-content">
+          <span class="close-button" onclick="closeModal('cart-modal')"
+            >&times;</span
+          >
+          <h3>Your Shopping Cart</h3>
+          <div id="cart-items-display">
+            <!-- Cart items will be dynamically loaded here -->
+          </div>
+          <div class="cart-summary">
+            Total: <span id="cart-total-display">₹0.00</span>
+          </div>
+          <div class="cart-actions-modal">
+            <a
+              href="#"
+              class="whatsapp-btn-modal"
+              id="whatsapp-link"
+              target="_blank"
+              >WhatsApp Us</a
+            >
+            <button class="buy-now-cart-btn-modal" onclick="proceedToBuyCart()">
+              Proceed to Buy
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quantity Selection Modal -->
+      <div class="modal" id="quantity-modal">
+        <div class="modal-content">
+          <span class="close-button" onclick="closeModal('quantity-modal')"
+            >&times;</span
+          >
+          <h3>Select Quantity</h3>
+          <p>How many <span id="qty-product-name"></span>s?</p>
+          <input type="number" id="quantity-input" value="1" min="1" />
+          <div class="coupon-section">
+            <input
+              type="text"
+              id="coupon-code-input"
+              placeholder="Enter Coupon Code (Optional)"
+            />
+            <button id="apply-coupon-btn">Apply Coupon</button>
+            <div
+              id="effective-price-display"
+              class="effective-price-display"
+            ></div>
+          </div>
+          <div class="modal-actions">
+            <button id="qty-confirm-add">Add to Cart</button>
+            <button id="qty-confirm-buy">Buy Now</button>
+            <button id="qty-cancel" onclick="closeModal('quantity-modal')">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Gallery Modal -->
+      <div class="modal" id="image-gallery-modal">
+        <div class="modal-content">
+          <span class="close-button" onclick="closeModal('image-gallery-modal')"
+            >&times;</span
+          >
+          <h3 id="gallery-product-name">Product Images</h3>
+          <p
+            id="gallery-product-offer"
+            style="
+              color: var(--offer-color);
+              font-weight: 600;
+              margin-top: -10px;
+              margin-bottom: 15px;
+            "
+          ></p>
+          <div class="gallery-main-area">
+            <img id="main-gallery-image" src="" alt="Main Product Image" />
+          </div>
+          <div id="gallery-thumbnails">
+            <!-- Thumbnails will be dynamically loaded here -->
+          </div>
+        </div>
+      </div>
+    </div> <!-- End of main-content -->
 
     <script>
-      // JavaScript to hide the loading overlay once the page is fully loaded
-      window.addEventListener("load", () => {
-        const loadingOverlay = document.getElementById("loading-overlay");
-        // Hide after 3 seconds
-        setTimeout(() => {
-          loadingOverlay.classList.add("hidden");
-        }, 3000); // 3000 milliseconds = 3 seconds
-      });
-
       let cart = [];
       let currentProduct = null;
       let currentAction = "";
@@ -1390,7 +1419,7 @@
 
       // Product data - This is the single place to manage product information
       const productsData = [
-        {
+       {
           code: "S012",
           name: "Pentonic Pen 10 Unit Blue pen",
           description:
@@ -1667,127 +1696,58 @@
           // Check if the product is revealed or still revealing
           const isRevealed = isProductRevealed(product.code);
 
-          if (product.revealingSoon && !isRevealed) {
-            // Product is revealing soon and not yet revealed
-            const revealTimestamp = getRevealTimestamp(product.code); // Ensure timestamp is set/retrieved
+          // All products are now immediately visible, removed revealingSoon check
+          card.innerHTML = `
+                      <img src="${product.images[0]}" alt="${product.name}"
+                           onerror="this.onerror=null;this.src='productpic/pic.jpeg';"
+                           onclick="openImageGalleryModal('${
+                             product.code
+                           }', 0)">
+                      <div class="card-body">
+                          <div class="card-title">${product.name}</div>
+                          <p class="card-description">${
+                            product.description
+                          }</p>
+                          <div class="card-price">
+                              ${
+                                product.marketPrice
+                                  ? `<span class="market-price">Market Price: ₹${product.marketPrice.toFixed(
+                                      2
+                                    )}</span>`
+                                  : ""
+                              }
+                              ₹${product.price.toFixed(2)}
+                          </div>
+                          ${
+                            product.offer
+                              ? `<p class="product-offer">Offer: ${product.offer}</p>`
+                              : ""
+                          }
+                          <div class="card-actions">
+                              <button class="add-to-cart-btn">Add to Cart</button>
+                              <button class="buy-now-btn">Buy Now</button>
+                          </div>
+                      </div>
+                  `;
+          productListContainer.appendChild(card);
 
-            card.innerHTML = `
-                        <img src="${product.images[0]}" alt="${product.name}"
-                             onerror="this.onerror=null;this.src='productpic/pic.jpeg';"
-                             onclick="openImageGalleryModal('${product.code}', 0)">
-                        <div class="card-body">
-                            <div class="card-title">${product.name}</div>
-                            <p class="card-description" style="filter: blur(3px); color: #888;">Revealing Soon!</p>
-                            <div class="card-price" style="filter: blur(3px); color: #888;">₹XXX.XX</div>
-                            <p class="product-offer" style="color: var(--offer-color); font-weight: 600; margin-bottom: 0.8rem;">
-                                <span id="countdown-${product.code}">Loading countdown...</span>
-                            </p>
-                            <div class="card-actions">
-                                <button class="add-to-cart-btn" disabled style="cursor: not-allowed; opacity: 0.6;">Add to Cart</button>
-                                <button class="buy-now-btn" disabled style="cursor: not-allowed; opacity: 0.6;">Buy Now</button>
-                            </div>
-                        </div>
-                    `;
-            productListContainer.appendChild(card);
-            // Initialize countdown for this product
-            startCountdown(product.code, revealTimestamp);
-          } else {
-            // Product is not revealing soon, or it has already been revealed
-            card.innerHTML = `
-                        <img src="${product.images[0]}" alt="${product.name}"
-                             onerror="this.onerror=null;this.src='productpic/pic.jpeg';"
-                             onclick="openImageGalleryModal('${
-                               product.code
-                             }', 0)">
-                        <div class="card-body">
-                            <div class="card-title">${product.name}</div>
-                            <p class="card-description">${
-                              product.description
-                            }</p>
-                            <div class="card-price">
-                                ${
-                                  product.marketPrice
-                                    ? `<span class="market-price">Market Price: ₹${product.marketPrice.toFixed(
-                                        2
-                                      )}</span>`
-                                    : ""
-                                }
-                                ₹${product.price.toFixed(2)}
-                            </div>
-                            ${
-                              product.offer
-                                ? `<p class="product-offer">Offer: ${product.offer}</p>`
-                                : ""
-                            }
-                            <div class="card-actions">
-                                <button class="add-to-cart-btn">Add to Cart</button>
-                                <button class="buy-now-btn">Buy Now</button>
-                            </div>
-                        </div>
-                    `;
-            productListContainer.appendChild(card);
-
-            // Add event listeners for non-revealing products
-            card
-              .querySelector(".add-to-cart-btn")
-              .addEventListener("click", () => {
-                currentProduct = { ...product }; // Create a copy to add temporary properties
-                openQuantityModal();
-              });
-
-            card.querySelector(".buy-now-btn").addEventListener("click", () => {
+          // Add event listeners
+          card
+            .querySelector(".add-to-cart-btn")
+            .addEventListener("click", () => {
               currentProduct = { ...product }; // Create a copy to add temporary properties
-              currentAction = "buy";
               openQuantityModal();
             });
-          }
+
+          card.querySelector(".buy-now-btn").addEventListener("click", () => {
+            currentProduct = { ...product }; // Create a copy to add temporary properties
+            currentAction = "buy";
+            openQuantityModal();
+          });
         });
       }
 
-      const countdownIntervals = {}; // To store interval IDs for each product
-
-      function startCountdown(productCode, targetTimestamp) {
-        // Clear any existing interval for this product to prevent duplicates
-        if (countdownIntervals[productCode]) {
-          clearInterval(countdownIntervals[productCode]);
-        }
-
-        const update = () => {
-          const now = Date.now();
-          const distance = targetTimestamp - now;
-
-          const countdownElement = document.getElementById(
-            `countdown-${productCode}`
-          );
-
-          if (distance < 0) {
-            clearInterval(countdownIntervals[productCode]);
-            if (countdownElement) {
-              countdownElement.textContent = "Revealed!";
-              // Mark product as revealed and re-render to show actual details
-              markProductAsRevealed(productCode);
-              renderProducts(document.getElementById("search").value); // Re-render all products to update display
-            }
-            return;
-          }
-
-          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-          const hours = Math.floor(
-            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-          );
-          const minutes = Math.floor(
-            (distance % (1000 * 60 * 60)) / (1000 * 60)
-          );
-          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-          if (countdownElement) {
-            countdownElement.textContent = `Revealing in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
-          }
-        };
-
-        update(); // Initial call to display immediately
-        countdownIntervals[productCode] = setInterval(update, 1000);
-      }
+      // Removed countdownIntervals and startCountdown functions as revealingSoon is removed
 
       // --- Cart Display and Logic ---
       function updateCartCount() {
@@ -1798,10 +1758,11 @@
         document.getElementById("cart-count").textContent = totalItems;
       }
 
-      document.addEventListener("DOMContentLoaded", () => {
+      // Function to initialize the page after the loading screen
+      function initializePage() {
         loadCart();
         updateCartCount();
-        renderProducts(); // Initial render to set up products and countdowns
+        renderProducts(); // Initial render to set up products
 
         document
           .getElementById("qty-confirm-add")
@@ -1822,8 +1783,27 @@
         document
           .getElementById("cart-button")
           .addEventListener("click", openCartModal);
+      }
 
-        // Removed event listeners for gallery navigation buttons
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const loadingScreen = document.getElementById("loading-screen");
+        const mainContent = document.getElementById("main-content");
+
+        // Set a timeout to hide the loading screen and show content after 3 seconds
+        setTimeout(() => {
+          loadingScreen.classList.add("hidden");
+          mainContent.style.display = "block";
+          initializePage(); // Initialize the main page content
+        }, 3000); // 3000 milliseconds = 3 seconds
+
+        // In case the content loads very quickly, ensure it's still shown after the delay
+        // This also acts as a fallback if the timeout somehow fails.
+        loadingScreen.addEventListener('transitionend', () => {
+            if (loadingScreen.classList.contains('hidden')) {
+                loadingScreen.style.display = 'none'; // Fully remove from layout after transition
+            }
+        });
       });
 
       // --- Modal Functions ---
@@ -2023,7 +2003,7 @@
         let cartContentHtml = "";
         let total = 0;
         let whatsappMessage =
-          "Hello S-Mart! I'd like to order the following items: is am from holkar\n\n";
+          "Hello S-Mart! I'd like to order the following items:\n\n";
 
         if (cart.length === 0) {
           cartItemsDisplay.innerHTML =
